@@ -3,20 +3,32 @@
 // eslint-disable-next-line no-undef
 const socket = io('/');
 // eslint-disable-next-line no-undef
-const peer = new Peer(undefined, {
-  path: '/peerjs',
-  host: '/',
-  port: '3000',
-});
+const peer = new Peer();
+
+// undefined, {
+//   host: '/',
+//   port: '3002',
+// }
 const myVideo = document.createElement('video');
 const videoGrid = document.getElementById('video-grid');
 myVideo.muted = true;
+
+
+peer.on('open', id => {
+  // eslint-disable-next-line no-undef
+  console.log(roomId, id);
+  // eslint-disable-next-line no-undef
+  socket.emit('join-room', roomId, id);
+});
 
 navigator.mediaDevices.getUserMedia({
   video: true,
   audio: true,
 }).then((stream) => {
   addVideoStream(myVideo, stream);
+
+
+
 
   peer.on('call', call => {
     call.answer(stream);
@@ -26,16 +38,16 @@ navigator.mediaDevices.getUserMedia({
     });
   });
 
-  socket.on('user-connected', (userId) => {
-    connectToNewUser(userId, stream);
+  socket.on('user-connected', async(userId) => {
+    setTimeout(() => {
+      connectToNewUser(userId, stream);
+    }, 1000);
   });
+
+
 });
 
-peer.on('open', id => {
-  // eslint-disable-next-line no-undef
-  console.log(roomId, id);
-  socket.emit('join-room', roomId, id);
-});
+
 
 
 
@@ -48,15 +60,26 @@ const addVideoStream = (video, stream) => {
   videoGrid.append(video);
 };
 
-const connectToNewUser = (userId, stream) => {
-
+const connectToNewUser = async(userId, stream) => {
   const call = peer.call(userId, stream);
   const video = document.createElement('video');
-  call.on('stream', userVideoStream => {
+
+  console.log('call', call);
+
+  await call.on('stream', function(userVideoStream) {
+    console.log('hiiii');
+    console.log('userVideoStream', userVideoStream);
     addVideoStream(video, userVideoStream);
+  });
+  call.on('close', () => {
+    console.log('CLOSED');
+    video.remove();
   });
 };
 
+socket.on('connect_error', (err) => {
+  console.log(`connect_error due to ${err.message}`);
+});
 
 
 

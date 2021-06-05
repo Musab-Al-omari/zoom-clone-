@@ -35,7 +35,6 @@ sio.on('connection', socket => {
 
 
   socket.on('join-room', (roomId, userId) => {
-
     socket.join(roomId);
     console.log('roomId', roomId);
     socket.broadcast.to(roomId).emit('user-connected', userId);

@@ -3,12 +3,18 @@
 // eslint-disable-next-line no-undef
 const socket = io('/');
 // eslint-disable-next-line no-undef
-const peer = new Peer();
-
+const peer = new Peer(undefined, {
+  host: 'vediotest-123.herokuapp.com',
+  port: '3003',
+  secure: true,
+});
 // undefined, {
-//   host: '/',
-//   port: '3002',
+//   host: 'vediotest-123.herokuapp.com',
+//   port: '3003',
+//   secure: true,
 // }
+
+// https://vediotest-123.herokuapp.com/
 const myVideo = document.createElement('video');
 const videoGrid = document.getElementById('video-grid');
 myVideo.muted = true;
@@ -38,7 +44,8 @@ navigator.mediaDevices.getUserMedia({
     });
   });
 
-  socket.on('user-connected', async(userId) => {
+  socket.on('user-connected', (userId) => {
+    console.log(userId);
     setTimeout(() => {
       connectToNewUser(userId, stream);
     }, 1000);
@@ -60,13 +67,13 @@ const addVideoStream = (video, stream) => {
   videoGrid.append(video);
 };
 
-const connectToNewUser = async(userId, stream) => {
+const connectToNewUser = (userId, stream) => {
   const call = peer.call(userId, stream);
   const video = document.createElement('video');
 
   console.log('call', call);
 
-  await call.on('stream', function(userVideoStream) {
+  call.on('stream', function(userVideoStream) {
     console.log('hiiii');
     console.log('userVideoStream', userVideoStream);
     addVideoStream(video, userVideoStream);

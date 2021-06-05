@@ -16,11 +16,11 @@ const videoGrid = document.getElementById('video-grid');
 myVideo.muted = true;
 
 async function omar() {
-  await peer.on('open', (id) => {
+  await peer.on('open', async(id) => {
     // eslint-disable-next-line no-undef
     console.log(roomId, id);
     // eslint-disable-next-line no-undef
-    socket.emit('join-room', roomId, id);
+    await socket.emit('join-room', roomId, id);
   });
 }
 omar();
@@ -48,9 +48,9 @@ navigator.mediaDevices.getUserMedia({
 
   socket.on('user-connected', (userId) => {
     console.log(userId);
-    // setTimeout(() => {
-    connectToNewUser(userId, stream);
-    // }, 1000);
+    setTimeout(() => {
+      connectToNewUser(userId, stream);
+    }, 1000);
   });
 
 

@@ -15,13 +15,19 @@ const myVideo = document.createElement('video');
 const videoGrid = document.getElementById('video-grid');
 myVideo.muted = true;
 
+async function omar() {
+  await peer.on('open', (id) => {
+    // eslint-disable-next-line no-undef
+    console.log(roomId, id);
+    // eslint-disable-next-line no-undef
+    socket.emit('join-room', roomId, id);
+  });
+}
+omar();
 
-peer.on('open', id => {
-  // eslint-disable-next-line no-undef
-  console.log(roomId, id);
-  // eslint-disable-next-line no-undef
-  socket.emit('join-room', roomId, id);
-});
+
+
+
 
 navigator.mediaDevices.getUserMedia({
   video: true,
@@ -42,9 +48,9 @@ navigator.mediaDevices.getUserMedia({
 
   socket.on('user-connected', (userId) => {
     console.log(userId);
-    setTimeout(() => {
-      connectToNewUser(userId, stream);
-    }, 1000);
+    // setTimeout(() => {
+    connectToNewUser(userId, stream);
+    // }, 1000);
   });
 
 

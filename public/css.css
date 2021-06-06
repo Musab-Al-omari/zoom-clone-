@@ -1,3 +1,8 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
 #video-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, 300px);
@@ -8,4 +13,33 @@ video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+#message-container {
+    width: 60%;
+    height: 180px;
+    overflow: auto;
+}
+
+#message-container div {
+    background-color: #CCC;
+    padding: 5px;
+}
+
+#message-container div:nth-child(2n) {
+    background-color: #FFF;
+}
+
+#send-container {
+    position: fixed;
+    padding-bottom: 30px;
+    bottom: 0;
+    background-color: white;
+    max-width: 1200px;
+    width: 80%;
+    display: flex;
+}
+
+#message-input {
+    flex-grow: 1;
 }

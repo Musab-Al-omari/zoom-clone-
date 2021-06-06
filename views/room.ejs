@@ -20,7 +20,15 @@
 <body>
     <h1>hello</h1>
     <div id="video-grid">
-
+    </div>
+    <button onclick="callStream(shareScreen())">Share Screen</button>
+    <button onclick="callStream(myNavigator)">Camera</button>
+    <div id="massage">
+        <div id="message-container"></div>
+        <form id="send-container">
+            <input type="text" id="message-input">
+            <button type="submit" id="send-button">Send</button>
+        </form>
     </div>
 
 </body>

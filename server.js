@@ -33,8 +33,6 @@ app.get('/:room', (req, res) => {
 });
 
 
-
-
 // create sio connection 
 sio.on('connection', socket => {
 
@@ -48,9 +46,12 @@ sio.on('connection', socket => {
     // send the user id to whom in the room 
     socket.broadcast.to(roomId).emit('user-connected', userId);
 
+
     socket.emit('userId-Joined', userId);
 
-
+    socket.on('share', () => {
+      socket.broadcast.to(roomId).emit('user-share', userId);
+    });
 
     socket.on('sendUserToServer', name => {
       newName = name;
@@ -63,9 +64,8 @@ sio.on('connection', socket => {
     });
 
 
-
-
     socket.on('disconnect', () => {
+      console.log(newName, userId);
       socket.broadcast.to(roomId).emit('user-disconnected', newName, userId);
     });
 
@@ -77,28 +77,14 @@ sio.on('connection', socket => {
 
 
 
-  socket.on('connect_error', (err) => {
-    console.log(`connect_error due to ${err.message}`);
-  });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 });
 
-
+// server-side
+// sio.use((socket, next) => {
+//   const err = new Error('not authorized');
+//   err.data = { content: 'Please retry later' }; // additional details
+//   next(err);
+// });
 
 
 

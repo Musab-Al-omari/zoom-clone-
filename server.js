@@ -6,9 +6,8 @@ const app = express();
 const uuid = require('uuid').v4;
 const cors = require('cors');
 const server = require('http').createServer(app);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const sio = require('socket.io')(server);
-
 
 app.set('view engine', 'ejs');
 app.use(cors());
@@ -49,8 +48,10 @@ sio.on('connection', socket => {
 
     socket.emit('userId-Joined', userId);
 
-    socket.on('share', () => {
-      socket.broadcast.to(roomId).emit('user-share', userId);
+    socket.on('share', (stream) => {
+      console.log('share');
+      console.log('hiiiiiii', userId);
+      socket.broadcast.to(roomId).emit('user-share', { userId, stream });
     });
 
     socket.on('sendUserToServer', name => {
@@ -65,7 +66,6 @@ sio.on('connection', socket => {
 
 
     socket.on('disconnect', () => {
-      console.log(newName, userId);
       socket.broadcast.to(roomId).emit('user-disconnected', newName, userId);
     });
 

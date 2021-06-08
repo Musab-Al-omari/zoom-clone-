@@ -183,53 +183,55 @@ function appendMessage(message) {
 // async function shareScreen() {
 //   return await navigator.mediaDevices.getDisplayMedia({ video: true });
 // }
-let stream;
-shareScreenB.addEventListener('click', async function name(event) {
+
+shareScreenB.addEventListener('click', function name(event) {
   event.preventDefault();
+  navigator.mediaDevices.getDisplayMedia({ video: true }).then(stream => {
+    // addVideoStream(video, stream);
+    socket.emit('share');
 
-  stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-  console.log('jjjjjjjjj');
-  console.log('user-share', stream);
-  socket.emit('share', stream);
+    myPeer.on('call', call => {
+      call.answer(stream);
+      const video = document.createElement('video');
+      call.on('stream', userVideoStream => {
+        addVideoStream(video, userVideoStream);
+      });
 
-  myPeer.on('call', call => {
-    call.answer(stream);
-    const video = document.createElement('video');
-    call.on('stream', userVideoStream => {
-      addVideoStream(video, userVideoStream);
+      call.on('close', () => {
+        console.log('CLOSED');
+        video.remove();
+      });
+      // peerObj[userId] = call;
     });
 
-    call.on('close', () => {
-      console.log('CLOSED');
-      video.remove();
+    socket.on('user-share', (userId) => {
+      console.log('user-share', userId);
+      setTimeout(() => {
+        connectNewShare(userId, stream);
+      }, 5000);
     });
-    // peerObj[userId] = call;
   });
-
-
 });
 
-socket.on('user-share', (userId) => {
-  console.log('user-share', stream);
-  setTimeout(() => {
-    connectNewShare(userId, stream);
-  }, 5000);
-});
 
 
 async function connectNewShare(userId, stream) {
   console.log(userId, stream);
   const call = myPeer.call(userId, stream);
 
-  console.log('call', call);
-  // const video = document.createElement('video');
-  // video.setAttribute('class', 'share');
-  // call.on('stream', function(userVideoStream) {
-  //   addVideoStream(video, userVideoStream);
-  // });
 
-  // call.on('close', () => {
-  //   console.log('CLOSED');
-  //   video.remove();
-  // });
+  console.log('call', call);
+  const video = document.createElement('video');
+  video.setAttribute('class', 'share');
+
+
+  call.on('stream', function(userVideoStream) {
+
+    addVideoStream(video, userVideoStream);
+  });
+
+  call.on('close', () => {
+    console.log('CLOSED');
+    video.remove();
+  });
 }

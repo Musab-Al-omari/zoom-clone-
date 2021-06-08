@@ -48,10 +48,10 @@ sio.on('connection', socket => {
 
     socket.emit('userId-Joined', userId);
 
-    socket.on('share', (stream) => {
+    socket.on('share', () => {
       console.log('share');
       console.log('hiiiiiii', userId);
-      socket.broadcast.to(roomId).emit('user-share', { userId, stream });
+      socket.broadcast.to(roomId).emit('user-share', userId);
     });
 
     socket.on('sendUserToServer', name => {

@@ -50,10 +50,11 @@ sio.on('connection', socket => {
 
     socket.on('share', () => {
       // socket.broadcast.to(roomId).emit('user-share', ids[1]);
-
-      socket.emit('user-share', ids[1]);
-      console.log(ids);
+      let x = ids[1];
       ids = [];
+      socket.emit('user-share', x);
+
+
     });
 
     socket.on('sendUserToServer', name => {

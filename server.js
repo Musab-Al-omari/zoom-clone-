@@ -49,9 +49,11 @@ sio.on('connection', socket => {
     socket.emit('userId-Joined', userId);
 
     socket.on('share', () => {
-      console.log(ids, userId);
       // socket.broadcast.to(roomId).emit('user-share', ids[1]);
+
       socket.emit('user-share', ids[1]);
+      console.log(ids);
+      ids = [];
     });
 
     socket.on('sendUserToServer', name => {

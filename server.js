@@ -6,7 +6,7 @@ const app = express();
 const uuid = require('uuid').v4;
 const cors = require('cors');
 const server = require('http').createServer(app);
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 const sio = require('socket.io')(server);
 
 app.set('view engine', 'ejs');
@@ -32,13 +32,13 @@ app.get('/:room', (req, res) => {
 });
 
 
-// create sio connection 
+let ids = [];
 sio.on('connection', socket => {
 
   let newName = '';
   // let MyUserId = '';
   socket.on('join-room', (roomId, userId) => {
-
+    ids.push(userId);
     // create a room using my room id 
     socket.join(roomId);
 
@@ -49,9 +49,9 @@ sio.on('connection', socket => {
     socket.emit('userId-Joined', userId);
 
     socket.on('share', () => {
-      console.log('share');
-      console.log('hiiiiiii', userId);
-      socket.broadcast.to(roomId).emit('user-share', userId);
+      console.log(ids, userId);
+      // socket.broadcast.to(roomId).emit('user-share', ids[1]);
+      socket.emit('user-share', ids[1]);
     });
 
     socket.on('sendUserToServer', name => {
@@ -66,18 +66,12 @@ sio.on('connection', socket => {
 
 
     socket.on('disconnect', () => {
+      console.log(newName, userId);
       socket.broadcast.to(roomId).emit('user-disconnected', newName, userId);
     });
-
-
-
   });
-
-
-
-
-
 });
+
 
 // server-side
 // sio.use((socket, next) => {

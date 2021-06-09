@@ -204,7 +204,7 @@ socket.on('user-share', (userId) => {
   navigator.mediaDevices.getDisplayMedia({ video: true }).then(stream => {
     setTimeout(() => {
       connectNewShare(userId, stream);
-    }, 5000);
+    }, 0);
   });
 });
 

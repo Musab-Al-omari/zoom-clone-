@@ -202,7 +202,9 @@ shareScreenB.addEventListener('click', async function name(event) {
 socket.on('user-share', (userId) => {
   console.log('userId', userId);
   navigator.mediaDevices.getDisplayMedia({ video: true }).then(stream => {
-    connectNewShare(userId, stream);
+    setTimeout(() => {
+      connectNewShare(userId, stream);
+    }, 2000);
   });
 });
 

@@ -49,6 +49,7 @@ async function callStream(stream) {
   addVideoStream(myVideo, stream);
   let x = await stream;
 
+
   peer.on('call', call => {
     console.log('iam in the');
     call.answer(x);
@@ -67,7 +68,7 @@ async function callStream(stream) {
     console.log('first time ');
     setTimeout(() => {
       connectToNewUser(userId, x);
-    }, 5000);
+    }, 3000);
   });
 }
 const myNavigator = navigator.mediaDevices.getUserMedia({ video: true, audio: true }) || navigator.mediaDevices.webkitGetUserMedia({ video: true, audio: true }) || navigator.mediaDevices.mozGetUserMedia({ video: true, audio: true }) || navigator.mediaDevices.msGetUserMedia({ video: true, audio: true });
@@ -75,12 +76,8 @@ callStream(myNavigator);
 
 
 const connectToNewUser = async(userId, stream) => {
-  let x = await stream;
 
-
-
-
-  const call = peer.call(userId, x);
+  const call = peer.call(userId, stream);
 
   const video = document.createElement('video');
 
@@ -217,10 +214,4 @@ async function connectNewShare(userId, stream) {
   console.log('call', call);
 }
 
-const addShareStream = async(video, stream) => {
-  video.srcObject = await stream;
-  video.addEventListener('loadedmetadata', () => {
-    video.play();
-  });
-  shareVideo.append(video);
-};
+console.log('helllllllo');

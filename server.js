@@ -44,32 +44,29 @@ sio.on('connection', socket => {
 
     // send the user id to whom in the room 
     socket.broadcast.to(roomId).emit('user-connected', userId);
-
-
-    socket.emit('userId-Joined', userId);
-
     socket.on('share', () => {
       // socket.broadcast.to(roomId).emit('user-share', ids[1]);
       let x = ids[1];
       ids = [];
       socket.emit('user-share', x);
-
-
     });
 
+
+    socket.emit('userId-Joined');
+
     socket.on('sendUserToServer', name => {
-      newName = name;
-      socket.broadcast.emit('sendBackUserToFrontEnd', name);
+     
+      socket.broadcast.to(roomId).emit('sendBackUserToFrontEnd', name);
     });
 
 
     socket.on('sendMassageToServer', message => {
-      socket.broadcast.emit('sendMassageBackToFrontEnd', message, newName);
+      socket.broadcast.to(roomId).emit('sendMassageBackToFrontEnd', message, newName);
     });
 
 
     socket.on('disconnect', () => {
-      console.log(newName, userId);
+    
       socket.broadcast.to(roomId).emit('user-disconnected', newName, userId);
     });
   });

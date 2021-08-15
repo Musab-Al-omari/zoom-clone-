@@ -106,7 +106,7 @@ socket.on('connect_error', err => {
 
 
 // alert that a user joined to the browser       //////////////////////////////////////////////////////////////////////////
-socket.on('userId-Joined', userid => {
+socket.on('userId-Joined', () => {
   let name = prompt('give me ur name');
   if (name === null) {
     name = 'black guy from Connan';
@@ -213,6 +213,7 @@ socket.on('user-share', (userId) => {
 async function connectNewShare(userId, stream) {
 
   const call = myPeer.call(userId, stream);
+  
   console.log('call', call);
 }
 
